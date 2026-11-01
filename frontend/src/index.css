@@ -1,0 +1,124 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-white font-sans text-ink antialiased;
+    background-image:
+      radial-gradient(900px 420px at 85% -80px, rgba(124, 108, 240, 0.11), transparent 70%),
+      radial-gradient(700px 360px at 0% -60px, rgba(62, 123, 250, 0.08), transparent 70%);
+    background-repeat: no-repeat;
+  }
+  h1,
+  h2,
+  h3 {
+    @apply font-display tracking-tight;
+  }
+  :focus-visible {
+    @apply outline-none ring-2 ring-lav-500 ring-offset-2 ring-offset-white;
+  }
+  input[type='number']::-webkit-inner-spin-button,
+  input[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input[type='number'] {
+    -moz-appearance: textfield;
+  }
+}
+
+@layer components {
+  .card {
+    @apply rounded-3xl border border-line bg-white shadow-card;
+  }
+  .btn {
+    @apply inline-flex min-h-[44px] items-center justify-center gap-2 rounded-xl px-5 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-60;
+  }
+  .btn-primary {
+    @apply btn bg-gradient-to-r from-lav-600 to-sky-600 text-white shadow-card hover:shadow-lift;
+  }
+  .btn-secondary {
+    @apply btn border border-line bg-white text-ink hover:border-lav-300 hover:bg-lav-50;
+  }
+  .input {
+    @apply min-h-[44px] w-full rounded-xl border border-line bg-white px-3.5 text-[15px] text-ink placeholder:text-[#8A8DAE] transition hover:border-lav-300;
+  }
+  .input[aria-invalid='true'] {
+    @apply border-red-400 bg-red-50/40;
+  }
+
+  /* Gradient hairline border for the two hero-level cards */
+  .gradient-border {
+    border: 1px solid transparent;
+    background:
+      linear-gradient(#fff, #fff) padding-box,
+      linear-gradient(135deg, #c9c0fb, #9dbbff 55%, #e9e5ff) border-box;
+  }
+
+  .card-hover {
+    transition:
+      transform 0.3s ease,
+      box-shadow 0.3s ease,
+      border-color 0.3s ease;
+  }
+  .card-hover:hover {
+    transform: translateY(-3px);
+    border-color: #d3cbfa;
+    box-shadow:
+      0 2px 4px rgba(60, 50, 140, 0.08),
+      0 18px 40px -16px rgba(60, 50, 140, 0.28);
+  }
+
+  /* Dotted grid that fades out, used behind the hero */
+  .bg-grid {
+    background-image: radial-gradient(#d6d0f4 1.1px, transparent 1.1px);
+    background-size: 24px 24px;
+    -webkit-mask-image: radial-gradient(ellipse 70% 80% at 60% 0%, #000 0%, transparent 70%);
+    mask-image: radial-gradient(ellipse 70% 80% at 60% 0%, #000 0%, transparent 70%);
+  }
+
+  /* Primary button: light sweep on hover, small lift, press feedback */
+  .btn-primary {
+    position: relative;
+    overflow: hidden;
+    transition:
+      transform 0.2s ease,
+      box-shadow 0.25s ease;
+  }
+  .btn-primary::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.35) 50%, transparent 70%);
+    transform: translateX(-100%);
+    transition: transform 0.7s ease;
+    pointer-events: none;
+  }
+  .btn-primary:hover:not(:disabled) {
+    transform: translateY(-1px);
+  }
+  .btn-primary:hover:not(:disabled)::after {
+    transform: translateX(100%);
+  }
+  .btn-primary:active:not(:disabled) {
+    transform: translateY(0) scale(0.98);
+  }
+  .btn-secondary:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
