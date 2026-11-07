@@ -1,7 +1,7 @@
 import type { AssessmentPayload, FieldName, PredictionResponse } from '../types'
 
 const RAW_BASE = import.meta.env.VITE_API_BASE_URL
-export const API_BASE_URL = (RAW_BASE ?? 'http://127.0.0.1:8000').replace(/\/+$/, '')
+export const API_BASE_URL = (RAW_BASE || 'http://127.0.0.1:8000').replace(/\/+$/, '')
 
 const REQUEST_TIMEOUT_MS = 20_000
 
