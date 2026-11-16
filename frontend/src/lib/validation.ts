@@ -16,10 +16,6 @@ export const EMPTY_FORM: FormState = {
   stress_level: '',
 }
 
-// Mirror the backend's limits so mistakes are caught before a request is sent.
-const MAX_UNLOCKS = 1000
-const HOUR_FIELDS = ['study_hours', 'physical_activity_hours', 'sleep_hours_per_night'] as const
-
 const oneOf = (list: readonly string[], value: string, message: string) =>
   list.includes(value) ? undefined : message
 
@@ -56,7 +52,7 @@ export function validateField(name: FieldName, value: string): string | undefine
       if (value.trim() === '') return 'Enter the number of unlocks.'
       const n = Number(value)
       if (!Number.isInteger(n)) return 'Unlocks must be a whole number.'
-      if (n < 0 || n > MAX_UNLOCKS) return `Unlocks must be between 0 and ${MAX_UNLOCKS}.`
+      if (n < 0) return 'Unlocks cannot be negative.'
       return undefined
     }
     case 'study_hours':
@@ -75,11 +71,6 @@ export function validateFields(names: readonly FieldName[], form: FormState) {
   for (const name of names) {
     const message = validateField(name, form[name])
     if (message) errors[name] = message
-  }
-  // Backend rule: sleep + study + physical activity cannot exceed 24 hours a day.
-  const budgetChecked = HOUR_FIELDS.every((f) => names.includes(f) && !errors[f])
-  if (budgetChecked && HOUR_FIELDS.reduce((sum, f) => sum + Number(form[f]), 0) > 24) {
-    errors.sleep_hours_per_night = 'Study, physical activity and sleep together cannot exceed 24 hours a day.'
   }
   return errors
 }

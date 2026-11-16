@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { RotateCcw, LayoutDashboard, TriangleAlert } from 'lucide-react'
+import { RotateCcw, LayoutDashboard } from 'lucide-react'
 import type { AssessmentPayload } from '../types'
 import InputSummary from './InputSummary'
 import Disclaimer from './Disclaimer'
@@ -7,13 +7,11 @@ import CountUp from './CountUp'
 
 interface Props {
   score: number
-  /** Reliability warnings returned by the backend (inputs outside the training range). */
-  warnings?: string[]
   payload: AssessmentPayload
   onReset: () => void
 }
 
-export default function ResultView({ score, warnings = [], payload, onReset }: Props) {
+export default function ResultView({ score, payload, onReset }: Props) {
   return (
     <div className="grid gap-6 lg:grid-cols-5">
       <section
@@ -38,20 +36,6 @@ export default function ResultView({ score, warnings = [], payload, onReset }: P
             This is the value returned by the model for the answers you submitted. The model's score scale has not
             been verified, so this page does not label it as low, moderate or high.
           </p>
-
-          {warnings.length > 0 && (
-            <div role="alert" className="mt-6 flex gap-3 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm leading-relaxed text-amber-900">
-              <TriangleAlert size={18} className="mt-0.5 shrink-0" aria-hidden />
-              <div>
-                <p className="font-semibold">This prediction may be unreliable</p>
-                <ul className="mt-1 list-disc space-y-1 pl-4">
-                  {warnings.map((w) => (
-                    <li key={w}>{w}</li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          )}
 
           <div className="mt-8 flex animate-rise flex-wrap gap-3" style={{ animationDelay: '650ms' }}>
             <button type="button" onClick={onReset} className="btn-primary">

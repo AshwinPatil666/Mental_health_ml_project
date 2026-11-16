@@ -22,7 +22,7 @@ export default function Assessment() {
   const [errors, setErrors] = useState<Errors>({})
   const [loading, setLoading] = useState(false)
   const [apiError, setApiError] = useState<ApiError | null>(null)
-  const [result, setResult] = useState<{ score: number; warnings: string[]; payload: AssessmentPayload } | null>(null)
+  const [result, setResult] = useState<{ score: number; payload: AssessmentPayload } | null>(null)
   const headingRef = useRef<HTMLHeadingElement>(null)
 
   useEffect(() => {
@@ -48,19 +48,13 @@ export default function Assessment() {
 
   const next = () => {
     const errs = validateFields(STEPS[step].fields, form)
-    // Replace (not merge) this step's errors so cross-field errors cannot go stale.
-    setErrors((e) => {
-      const rest = { ...e }
-      for (const f of STEPS[step].fields) delete rest[f]
-      return { ...rest, ...errs }
-    })
+    setErrors((e) => ({ ...e, ...errs }))
     if (Object.keys(errs).length) return focusFirstInvalid()
     setApiError(null)
     setStep(step + 1)
   }
 
   const submit = async () => {
-    if (loading) return // ignore a second Enter/click while a request is in flight
     // Validate everything again so the payload is guaranteed to match the contract.
     const allFields = STEPS.flatMap((s) => s.fields)
     const errs = validateFields(allFields, form)
@@ -75,7 +69,7 @@ export default function Assessment() {
     try {
       const res = await predictMentalHealthScore(payload)
       addHistory(res.predicted_mental_health_score, payload)
-      setResult({ score: res.predicted_mental_health_score, warnings: res.warnings, payload })
+      setResult({ score: res.predicted_mental_health_score, payload })
     } catch (err) {
       const e = err instanceof ApiError ? err : new ApiError('server', 'Something unexpected went wrong.')
       setApiError(e)
@@ -103,7 +97,7 @@ export default function Assessment() {
         <h1 ref={headingRef} tabIndex={-1} className="mb-6 text-3xl font-semibold outline-none focus-visible:ring-0 focus-visible:ring-offset-0 sm:text-4xl">
           Your result
         </h1>
-        <ResultView score={result.score} warnings={result.warnings} payload={result.payload} onReset={reset} />
+        <ResultView score={result.score} payload={result.payload} onReset={reset} />
       </div>
     )
   }
@@ -160,7 +154,7 @@ export default function Assessment() {
             <SelectField {...common2('most_used_platform')} label="Most used platform" hint="The one you open most often." options={PLATFORMS} placeholder="Choose a platform" />
             <SelectField {...common2('purpose_of_use')} label="Main purpose of use" hint="Why you mostly use it." options={PURPOSES} placeholder="Choose a purpose" />
             <NumberField {...common2('avg_daily_usage_hours')} label="Daily social media use" hint="Average hours per day, 0 to 24." unit="hours" min={0} max={24} step={0.1} placeholder="5.5" />
-            <NumberField {...common2('daily_unlocks')} label="Daily phone unlocks" hint="How many times you unlock your phone per day." unit="unlocks" min={0} max={1000} step={1} placeholder="80" />
+            <NumberField {...common2('daily_unlocks')} label="Daily phone unlocks" hint="How many times you unlock your phone per day." unit="unlocks" min={0} step={1} placeholder="80" />
           </div>
         )}
 

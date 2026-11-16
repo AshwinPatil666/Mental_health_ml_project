@@ -11,9 +11,8 @@ export const PURPOSES = ['Networking', 'Education', 'Entertainment', 'News'] as 
 export const STRESS_LEVELS = ['Low', 'Medium', 'High', 'Very High'] as const
 
 /**
- * Suggestions only. Any country string is accepted. The backend ignores case and
- * accepts a few synonyms ("United States" -> USA); the first nine names below are
- * the ones the model knows individually. Every other value is grouped as "Other".
+ * Suggestions only. Any country string is accepted. The backend groups the
+ * first nine spelled exactly like this; every other value is grouped as "Other".
  */
 export const COUNTRY_SUGGESTIONS = [
   'India', 'USA', 'Canada', 'Australia', 'UK', 'Germany', 'Mexico', 'Turkey', 'France',

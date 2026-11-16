@@ -22,8 +22,6 @@ export type FormState = Record<FieldName, string>
 /** Exact response body returned by POST /predict. */
 export interface PredictionResponse {
   predicted_mental_health_score: number
-  /** Present when an input lies outside the range the model was trained on. */
-  warnings: string[]
 }
 
 export interface HistoryEntry {

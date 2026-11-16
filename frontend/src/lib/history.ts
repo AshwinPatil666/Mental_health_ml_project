@@ -5,29 +5,12 @@ import type { AssessmentPayload, HistoryEntry } from '../types'
 const KEY = 'mindmetrics-history-v1'
 const MAX_ENTRIES = 25
 
-// localStorage can hold anything (old versions, manual edits). Drop malformed
-// entries so one bad record cannot crash the dashboard.
-function isHistoryEntry(value: unknown): value is HistoryEntry {
-  const e = value as Partial<HistoryEntry> | null
-  return (
-    typeof e === 'object' &&
-    e !== null &&
-    typeof e.id === 'string' &&
-    typeof e.createdAt === 'string' &&
-    !Number.isNaN(Date.parse(e.createdAt)) &&
-    typeof e.score === 'number' &&
-    Number.isFinite(e.score) &&
-    typeof e.payload === 'object' &&
-    e.payload !== null
-  )
-}
-
 export function loadHistory(): HistoryEntry[] {
   try {
     const raw = localStorage.getItem(KEY)
     if (!raw) return []
-    const parsed: unknown = JSON.parse(raw)
-    return Array.isArray(parsed) ? parsed.filter(isHistoryEntry) : []
+    const parsed = JSON.parse(raw)
+    return Array.isArray(parsed) ? (parsed as HistoryEntry[]) : []
   } catch {
     return []
   }
